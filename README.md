@@ -576,11 +576,7 @@ mcp-ssh/
 ├── doc/
 │   ├── example.png            # Usage example screenshot
 │   └── Claude.png             # Claude Desktop integration example
-├── src/                       # TypeScript source files (development)
-│   ├── ssh-client.ts          # SSH operations implementation
-│   ├── ssh-config-parser.ts   # SSH configuration parsing
-│   └── types.ts               # Type definitions
-└── tsconfig.json              # TypeScript configuration
+└── doc/                       # Documentation assets
 ```
 
 ## About

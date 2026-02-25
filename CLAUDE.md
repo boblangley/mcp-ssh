@@ -33,18 +33,13 @@ This is MCP SSH Agent (@aiondadotcom/mcp-ssh) - a Model Context Protocol (MCP) s
 ### Main Entry Point
 - `server-simple.mjs` - Self-contained MCP server implementation that includes all functionality inline to avoid module resolution issues
 
-### Source Structure (Development)
-- `src/` - TypeScript source files (currently not compiled/used in production)
-  - `ssh-client.ts` - SSH operations using node-ssh library (development version)
-  - `ssh-config-parser.ts` - SSH config parsing utilities
-  - `types.ts` - TypeScript type definitions
+### Other Files
 - `bin/mcp-ssh.js` - Binary wrapper for npx compatibility
 
 ### Key Design Decisions
 1. **Native SSH Tools**: Uses system `ssh` and `scp` commands rather than JavaScript SSH libraries for reliability
 2. **Self-contained**: `server-simple.mjs` includes all code inline to avoid ESM import issues
-3. **Dual Implementation**: TypeScript source in `src/` for development, JavaScript implementation in `server-simple.mjs` for production
-4. **Silent Mode**: Controlled by `MCP_SILENT` environment variable to disable debug output when used as MCP server
+3. **Silent Mode**: Controlled by `MCP_SILENT` environment variable to disable debug output when used as MCP server
 
 ## SSH Configuration Integration
 
