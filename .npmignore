@@ -21,6 +21,7 @@ node_modules/
 # Tests
 test-ssh/
 *.test.mjs
+coverage/
 
 # Generated files
 *.tgz
