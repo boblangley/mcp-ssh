@@ -745,10 +745,12 @@ async function main() {
 export { SSHConfigParser, SSHClient, debugLog, main };
 
 /* c8 ignore start */
-// Start the server only when run directly
+// Start the server only when run directly (not when imported by tests)
 const isMainModule = process.argv[1] && (
   process.argv[1] === fileURLToPath(import.meta.url) ||
-  process.argv[1].endsWith('/server.mjs')
+  process.argv[1].endsWith('/server.mjs') ||
+  process.argv[1].endsWith('/mcp-ssh.js') ||
+  process.argv[1].endsWith('/mcp-ssh')
 );
 
 if (isMainModule) {
