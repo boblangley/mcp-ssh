@@ -243,7 +243,7 @@ The MCP SSH Agent correctly processes `Include` directives regardless of their p
 
 #### Example ~/.ssh/config
 
-Here's an example SSH configuration file that demonstrates various connection scenarios including Include directives:
+Here's an example SSH configuration file that demonstrates various connection scenarios including Include directives and `@password` annotations for password-based authentication:
 
 ```ssh-config
 # Include directives must be at the beginning due to SSH bug
@@ -267,6 +267,12 @@ Host root@prod
     User root
     IdentityFile ~/.ssh/id_prod_rsa
 
+# Router with password authentication (no SSH key)
+Host router
+    Hostname 192.168.1.1
+    User admin
+    # @password:cQbG0q@019TAoehZel7V
+
 # Archive server accessed through production jump host
 Host archive
     Hostname 2001:db8:1f0:cafe::1
@@ -287,24 +293,27 @@ Host web2.example.com
     User root
     IdentityFile ~/.ssh/id_ed25519
 
-# Database server with custom key
+# Database server with custom key and passphrase-protected key
 Host database
     Hostname 203.0.113.50
     Port 22077
     User dbadmin
     IdentityFile ~/.ssh/id_database_rsa
     IdentitiesOnly yes
+    # @password:U1Jqn=NoKdELYn&h1jVT
 
-# Mail servers
+# Mail servers (password auth, no SSH key)
 Host mail1
     Hostname 198.51.100.88
     Port 22078
     User mailuser
+    # @password:7iBiV8lyoq*zANv46ALD
 
 Host root@mail1
     Hostname 198.51.100.88
     Port 22078
     User root
+    # @password:MRDHI2h!zhhN=ZJIxWzH
 
 # Monitoring server
 Host monitor
@@ -334,6 +343,7 @@ This configuration demonstrates:
 - **IPv6 addresses**: Modern networking support
 - **Identity files**: Specific SSH keys for different servers
 - **Security options**: `IdentitiesOnly yes` to use only specified keys
+- **Password authentication**: `# @password:` annotations for devices without SSH key support (e.g., routers, switches) or for passphrase-protected keys
 
 #### How MCP SSH Agent Uses Your Configuration
 
