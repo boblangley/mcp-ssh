@@ -11,7 +11,6 @@
 import { homedir } from 'os';
 import { readFile, stat, writeFile, chmod, unlink } from 'fs/promises';
 import { join } from 'path';
-import { fileURLToPath } from 'url';
 import { createRequire } from 'module';
 
 // Use createRequire to work around ESM import issues
@@ -825,22 +824,10 @@ async function main() {
   }
 }
 
-// Export classes for testing
+// Export classes and main() for the bin wrapper and tests.
+// We do NOT auto-start main() based on a process.argv[1] heuristic — that
+// check was unreliable on Windows (backslashes vs forward slashes) and
+// caused the server to silently exit when launched via bin/mcp-ssh.js on
+// Windows MCP clients (issue #8). The bin wrapper now imports and calls
+// main() explicitly.
 export { SSHConfigParser, SSHClient, debugLog, main };
-
-/* c8 ignore start */
-// Start the server only when run directly (not when imported by tests)
-const isMainModule = process.argv[1] && (
-  process.argv[1] === fileURLToPath(import.meta.url) ||
-  process.argv[1].endsWith('/server.mjs') ||
-  process.argv[1].endsWith('/mcp-ssh.js') ||
-  process.argv[1].endsWith('/mcp-ssh')
-);
-
-if (isMainModule) {
-  main().catch(error => {
-    debugLog(`Unhandled error: ${error.message}\n`);
-    process.exit(1);
-  });
-}
-/* c8 ignore stop */

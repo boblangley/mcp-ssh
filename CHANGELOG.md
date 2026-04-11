@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.6] - 2026-04-11
+
+### Fixed
+- **Windows startup (fixes #8)**: The server silently exited when launched via `bin/mcp-ssh.js` on Windows MCP clients (e.g. Antigravity), causing a "failed to initialize: EOF" error. The cause was an `isMainModule` check in `server.mjs` that compared `process.argv[1]` against forward-slash path suffixes (`/mcp-ssh.js`), which never matched on Windows where `process.argv[1]` uses backslashes. The check has been removed entirely; `bin/mcp-ssh.js` now imports `main()` from `server.mjs` and calls it explicitly. Reported by @sdwru.
+
 ## [1.3.5] - 2026-04-11
 
 ### Security
