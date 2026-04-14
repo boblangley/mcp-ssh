@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.8] - 2026-04-14
+
+### Fixed
+- **Startup regression**: The `start.sh`, `start-silent.sh`, `npm start`, `npm run dev`, and DXT manifest all launched `node server.mjs` directly, but since 1.3.6 `server.mjs` no longer auto-runs `main()` — only `bin/mcp-ssh.js` does. The server therefore exited immediately on startup for anyone not invoking the bin wrapper (including the shipped start scripts and DXT package). All entry points now call `node bin/mcp-ssh.js`.
+
 ## [1.3.7] - 2026-04-11
 
 ### Security

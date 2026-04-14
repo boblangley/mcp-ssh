@@ -1,7 +1,7 @@
 {
   "dxt_version": "0.1",
   "name": "mcp-ssh",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Connect to SSH hosts, run commands, and transfer files securely through Claude Desktop",
   "author": {
     "name": "aionda.com",
@@ -25,10 +25,10 @@
   ],
   "server": {
     "type": "node",
-    "entry_point": "server.mjs",
+    "entry_point": "bin/mcp-ssh.js",
     "mcp_config": {
       "command": "node",
-      "args": ["${__dirname}/server.mjs"],
+      "args": ["${__dirname}/bin/mcp-ssh.js"],
       "env": {
         "MCP_SILENT": "true"
       }

@@ -8,4 +8,4 @@ cd "$(dirname "$0")"
 # No debug output will be shown, only clean JSON communication
 
 export MCP_SILENT=true
-exec node server.mjs
+exec node bin/mcp-ssh.js
