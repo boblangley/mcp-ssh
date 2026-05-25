@@ -13,12 +13,12 @@ vi.mock('fs/promises', async () => {
     readFile: vi.fn(),
     stat: vi.fn(),
     writeFile: vi.fn(),
+    mkdtemp: vi.fn(),
     chmod: vi.fn(),
-    unlink: vi.fn(),
   };
 });
 
-import { readFile, stat, writeFile, chmod } from 'fs/promises';
+import { readFile, stat, writeFile, chmod, mkdtemp } from 'fs/promises';
 import { SSHConfigParser, SSHClient, main } from './server.mjs';
 
 // Helper: create a fake spawn that returns a mock child process
@@ -443,6 +443,7 @@ describe('SSHClient', () => {
   beforeEach(() => {
     client = new SSHClient();
     vi.clearAllMocks();
+    mkdtemp.mockResolvedValue('/tmp/mcp-ssh-askpass-test');
   });
 
   describe('getPasswordForHost', () => {
@@ -485,6 +486,7 @@ describe('SSHClient', () => {
       const path2 = await client.getAskpassScript();
 
       expect(path1).toBe(path2);
+      expect(mkdtemp).toHaveBeenCalledWith(expect.stringContaining('mcp-ssh-askpass-'));
       expect(writeFile).toHaveBeenCalledTimes(1);
       expect(chmod).toHaveBeenCalledWith(path1, 0o700);
     });
@@ -496,8 +498,9 @@ describe('SSHClient', () => {
       await client.getAskpassScript();
 
       expect(writeFile).toHaveBeenCalledWith(
-        expect.stringContaining('mcp-ssh-askpass'),
-        '#!/bin/sh\necho "$MCP_SSH_PASS"\n'
+        expect.stringContaining('askpass.sh'),
+        '#!/bin/sh\necho "$MCP_SSH_PASS"\n',
+        { mode: 0o700, flag: 'wx' }
       );
     });
   });

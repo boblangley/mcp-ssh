@@ -1,5 +1,5 @@
 {
-  "name": "@aiondadotcom/mcp-ssh",
+  "name": "@boblangley/mcp-ssh",
   "version": "1.3.8",
   "description": "MCP Agent for managing SSH hosts - A Model Context Protocol server for SSH operations",
   "main": "server.mjs",
@@ -35,14 +35,14 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aiondadotcom/mcp-ssh.git"
+    "url": "git+https://github.com/boblangley/mcp-ssh.git"
   },
-  "homepage": "https://github.com/aiondadotcom/mcp-ssh",
+  "homepage": "https://github.com/boblangley/mcp-ssh",
   "bugs": {
-    "url": "https://github.com/aiondadotcom/mcp-ssh/issues"
+    "url": "https://github.com/boblangley/mcp-ssh/issues"
   },
   "publishConfig": {
-    "access": "public"
+    "registry": "https://npm.pkg.github.com"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.12.0",

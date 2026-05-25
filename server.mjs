@@ -9,7 +9,7 @@
 
 // Import required Node.js modules
 import { homedir } from 'os';
-import { readFile, stat, writeFile, chmod, unlink } from 'fs/promises';
+import { readFile, stat, writeFile, chmod, mkdtemp } from 'fs/promises';
 import { join } from 'path';
 import { createRequire } from 'module';
 
@@ -293,6 +293,7 @@ class SSHClient {
   constructor() {
     this.configParser = new SSHConfigParser();
     this._askpassScript = null;
+    this._askpassDir = null;
     this._spawn = spawn;
     this._execFileAsync = execFileAsync;
   }
@@ -345,19 +346,21 @@ class SSHClient {
     if (this._askpassScript) return this._askpassScript;
 
     const { tmpdir } = require('os');
+    const askpassDir = await mkdtemp(join(tmpdir(), 'mcp-ssh-askpass-'));
     let scriptPath;
     if (isWindows) {
-      scriptPath = join(tmpdir(), `mcp-ssh-askpass-${process.pid}.cmd`);
-      await writeFile(scriptPath, '@echo off\r\necho %MCP_SSH_PASS%\r\n');
+      scriptPath = join(askpassDir, 'askpass.cmd');
+      await writeFile(scriptPath, '@echo off\r\necho %MCP_SSH_PASS%\r\n', { mode: 0o700, flag: 'wx' });
     } else {
-      scriptPath = join(tmpdir(), `mcp-ssh-askpass-${process.pid}.sh`);
-      await writeFile(scriptPath, '#!/bin/sh\necho "$MCP_SSH_PASS"\n');
+      scriptPath = join(askpassDir, 'askpass.sh');
+      await writeFile(scriptPath, '#!/bin/sh\necho "$MCP_SSH_PASS"\n', { mode: 0o700, flag: 'wx' });
       await chmod(scriptPath, 0o700);
     }
     this._askpassScript = scriptPath;
+    this._askpassDir = askpassDir;
 
     // Clean up on exit
-    const cleanup = () => { try { require('fs').unlinkSync(scriptPath); } catch {} };
+    const cleanup = () => { try { require('fs').rmSync(askpassDir, { recursive: true, force: true }); } catch {} };
     process.on('exit', cleanup);
     process.on('SIGINT', () => { cleanup(); process.exit(130); });
     process.on('SIGTERM', () => { cleanup(); process.exit(143); });
